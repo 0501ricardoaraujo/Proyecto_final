@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>Pagina de inicio</title>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link rel="shortcut icon" href="">
+    <!-- Bootstrap CSS v5.2.1 -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.1/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-iYQeCzEYFbKjA/T2uDLTpkwGzCiq6soy8tYaI1GyVh/UjpbCx/TYkiZhlZB6+fzT" crossorigin="anonymous">
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet" />
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+
+    <title>Marvel APP</title>
+    <style>
+        img.img-thumbnail {
+            width: 80%;
+            height: 80%;
+        }
+
+        .titulo {
+            margin: auto;
+            padding: 1rem;
+            width: 90rem;
+            margin-top: 1rem;
+        }
+    </style>
+</head>
+<body>
+
+    <nav style="border-bottom: 2px solid grey;" class="navbar navbar-expand-lg navbar-light bg-light">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="/">Tienda Marvel</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarText"
+                aria-controls="navbarText" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarText">
+                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                    <li class="nav-item" style="margin-right: 0.5rem;">
+                        <button type="button" class="btn btn-success" onclick="location.href='/'">
+                            Inicio
+                        </button>
+                    </li>
+                </ul>
+            </div>
+            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                <% if(sesion.loggedin){ %>
+                    <li class="nav-item" style="margin-right: 0.5rem;">
+                        <button type="button" class="btn" style="border-bottom: 1px solid black;">
+                            <%= sesion.name %>
+                        </button>
+                    </li>
+                    <li class="nav-item" style="margin-right: 0.5rem;">
+                        <button onclick="location.href='/logout'" type="button" class="btn btn-danger">
+                            Cerrar sesión
+                        </button>
+                    </li>
+                <% } %>
+            </ul>
+        </div>
+    </nav>
+
+    <div class="titulo">
+        <table style="width: 100%;">
+            <tr>
+                <td>
+                    <h3>Usuario</h3>
+                </td>
+            </tr>
+        </table>
+        <hr style="background-color: black;">
+        <div class="table-responsive">
+            <table class="table" style="vertical-align: middle;">
+                <thead>
+                    <tr>
+                        <th scope="col">ID</th>
+                        <th scope="col">Nombre(s)</th>
+                        <th scope="col">Apellidos</th>
+                        <th scope="col">Correo</th>
+                        <th scope="col">Nombre Usuario</th>
+                        <th scope="col">Teléfono</th>
+                        <th scope="col">Tipo Usuario</th>
+                        <th scope="col" style="width: 20%;">Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <% results.forEach((user)=>{ %>
+                    <tr class="">
+                        <td><%= user.id %></td>
+                        <td><%= user.nombres %></td>
+                        <td><%= user.apellidos %></td>
+                        <td><%= user.email %></td>
+                        <td><%= user.nombreUsuario %></td>
+                        <td><%= user.psswd %></td>
+                        <td><%= user.phone %></td>
+                        <td><%= user.tipoUsuario %></td>
+                        <td>
+                            <button type="button" class="btn btn-primary" data-bs-toggle="modal"
+                                data-bs-target="#edit<%= user.id %>">
+                                Editar
+                            </button>
+                            <% if(sesion.idUser != user.id){ %>
+                                <button type="button" class="btn btn-danger" onclick="location.href='/eliminarUser?id=<%= user.id %>'">
+                                    Eliminar
+                                </button>
+                            <% } %>
+                            
+                            <% if(sesion.idUser != user.id){ %>
+                                <button type="button" class="btn btn-primary" onclick="location.href='/saveUser?id=<%= user.id %>'">
+                                    Agregar
+                                </button>
+                            <% } %>
+                            <!-- Modal Editar -->
+                            <div class="modal fade" id="edit<%= user.id %>" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                <div class="modal-dialog">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h5 class="modal-title" id="exampleModalLabel">Editar Usuario</h5>
+                                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                        </div>
+                                        <div class="modal-body">
+                                            <form action="/editUser?id=<%= user.id %>" method="POST">
+                                                <div class="mb-3">
+                                                    <label for="" class="form-label">Nombre de usuario</label>
+                                                    <input type="text" value="<%= user.nombreUsuario %>" class="form-control" name="user" id="" aria-describedby="helpId"
+                                                        placeholder="" />
+                                                    <small id="helpId" class="form-text text-muted">Escribe tu nombre de usuario</small>
+                                                </div>
+                                                <div class="mb-3">
+                                                    <label for="" class="form-label">Correo electronico</label>
+                                                    <input type="email" value="<%= user.email %>" class="form-control" name="email" id="" aria-describedby="helpId"
+                                                        placeholder="" />
+                                                    <small id="helpId" class="form-text text-muted">Escribe tu correo electronico</small>
+                                                </div>
+                                                <div class="mb-3">
+                                                    <label for="" class="form-label">Tipo de Usuario</label>
+                                                    <div class="mb-3">
+                                                        <select class="form-select" name="tipoUsuario" id="">
+                                                            <% tipoUsuario.forEach((tipo)=>{ %>
+                                                            <option <% if(tipoUsuario.idTipUsuario == user.idTipUsuario){ %> selected <%}%> value="<%= tipo.idTipUsuario%>"><%= tipo.tipoUsuario%></option>
+                                                            <% }) %>
+                                                        </select>
+                                                    </div>
+                                                </div>
+                                                <div class="mb-3">
+                                                    <label for="" class="form-label">Nombre(s)</label>
+                                                    <input type="text" value="<%= user.nombres %>" class="form-control" name="nombre" id="" aria-describedby="helpId"
+                                                        placeholder="" />
+                                                    <small id="helpId" class="form-text text-muted">Escribe tu nombre(s) completo(s)</small>
+                                                </div>
+                                                <div class="mb-3">
+                                                    <label for="" class="form-label">Apellidos</label>
+                                                    <input type="text" value="<%= user.apellidos %>" class="form-control" name="apellido" id="" aria-describedby="helpId"
+                                                        placeholder="" />
+                                                    <small id="helpId" class="form-text text-muted">Escribe tus apellidos</small>
+                                                </div>
+                                                <div class="mb-3">
+                                                    <label for="" class="form-label">Teléfono</label>
+                                                    <input type="text" value="<%= user.phone %>" class="form-control" name="telefono" id="" aria-describedby="helpId"
+                                                        placeholder="" />
+                                                    <small id="helpId" class="form-text text-muted">Escribe tu numero de teléfono</small>
+                                                </div>
+                                                <div class="mb-3">
+                                                    <label for="" class="form-label">Contraseña</label>
+                                                    <input type="password" value="<%= user.psswd %>" class="form-control" name="password" id="" aria-describedby="helpId"
+                                                        placeholder="" />
+                                                    <small id="helpId" class="form-text text-muted">Escribe tu contraseña</small>
+                                                </div>
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                                            <input type="submit" class="btn btn-success" value="Guardar">
+                                            </form>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+                    <% }) %>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- Bootstrap JavaScript Libraries -->
+    <script src="https://unpkg.com/boxicons@2.1.4/dist/boxicons.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"
+        integrity="sha384-oBqDVmMz9ATKxIep9tiCxS/Z9fNfEXiDAYTujMAeBAsjFuCZSmKbSSUnQlmh/jp3" crossorigin="anonymous">
+        </script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
+        integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
+        crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
+        integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"
+        crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
+        integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
+        crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.1/dist/js/bootstrap.min.js"
+        integrity="sha384-7VPbUDkoPSGFnVtYi0QogXtr74QeVeeIs99Qfg5YCF+TidwNdjvaKZX19NZ/e6oz" crossorigin="anonymous">
+        </script>
+</body>
+
+</html>
+
+
+    
