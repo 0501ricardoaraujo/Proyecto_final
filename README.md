@@ -1,1 +1,1 @@
-Proyecto final con todas las medidas necesarias para su ejecucion
+Proyecto final con todas las librerias necesarias para su ejecucion
